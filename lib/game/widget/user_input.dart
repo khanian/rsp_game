@@ -4,8 +4,9 @@ import 'package:rsp_game/game/widget/input_card.dart';
 
 class UserInput extends StatelessWidget {
   final bool isDone;
+  final Function(InputType) callback;
 
-  const UserInput({required this.isDone, super.key});
+  const UserInput({required this.isDone, required this.callback, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +15,18 @@ class UserInput extends StatelessWidget {
     }
 
     return Row(
-      children: _getInputs(),
+      children: _getInputs(callback),
     );
   }
 
-  List<Widget> _getInputs() {
+  List<Widget> _getInputs(Function(InputType) callback) {
     return InputType.values
-        .map((type) => InputCard(child: Image.asset(type.path)))
+        .map(
+          (type) => InputCard(
+            child: Image.asset(type.path),
+            callback: () => callback.call(type),
+          ),
+        )
         .toList();
   }
 }
